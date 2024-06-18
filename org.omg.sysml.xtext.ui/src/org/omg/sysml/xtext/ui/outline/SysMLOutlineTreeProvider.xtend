@@ -85,9 +85,9 @@ class SysMLOutlineTreeProvider extends KerMLOutlineTreeProvider {
 	
 	def void _createChildren(IOutlineNode parentNode, RequirementDefinition requirementDef) {
 		if (requirementDef.text !== null) {
-			createEStructuralFeatureNode(parentNode, requirementDef, 
+			getOutlineNodeFactory.createEStructuralFeatureNode(parentNode, requirementDef, 
 				SysMLPackage.eINSTANCE.requirementDefinition_Text, 
-				_image(requirementDef.text), 'text ' + requirementDef.text, true
+				getImageDescriptor(requirementDef.text), 'text ' + requirementDef.text, true
 			)
 		}
 		super._createChildren(parentNode, requirementDef)
@@ -99,9 +99,9 @@ class SysMLOutlineTreeProvider extends KerMLOutlineTreeProvider {
 	
 	def void _createChildren(IOutlineNode parentNode, RequirementUsage requirement) {
 		if (requirement.text !== null) {
-			createEStructuralFeatureNode(parentNode, requirement, 
+			getOutlineNodeFactory.createEStructuralFeatureNode(parentNode, requirement, 
 				SysMLPackage.eINSTANCE.requirementDefinition_Text, 
-				_image(requirement.text), 'text ' + requirement.text, true
+				getImageDescriptor(requirement.text), 'text ' + requirement.text, true
 			)
 		}
 		super._createChildren(parentNode, requirement)
@@ -113,8 +113,8 @@ class SysMLOutlineTreeProvider extends KerMLOutlineTreeProvider {
 	
 	def void _createChildren(IOutlineNode parentNode, ConjugatedPortTyping typing) {
 		if (typing.conjugatedPortDefinition !== null) {
-			createEObjectNode(parentNode, typing.conjugatedPortDefinition, 
-				_image(typing.conjugatedPortDefinition), typing.conjugatedPortDefinition._text, false
+			getOutlineNodeFactory.createEObjectNode(parentNode, typing.conjugatedPortDefinition, 
+				getImageDescriptor(typing.conjugatedPortDefinition), typing.conjugatedPortDefinition._text, false
 			)
 		}
 	}

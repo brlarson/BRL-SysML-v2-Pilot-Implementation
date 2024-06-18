@@ -88,6 +88,7 @@ import org.omg.sysml.lang.sysml.MultiplicityRange
 import org.eclipse.emf.ecore.resource.Resource
 import org.omg.sysml.lang.sysml.FeatureDirectionKind
 import org.omg.sysml.lang.sysml.Metaclass
+import org.eclipse.xtext.validation.CheckType
 
 /**
  * This class contains custom validation rules. 
@@ -274,7 +275,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 
 	/* ROOT */
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkElement(Element elm) {
 		// validateElementIsImpliedIncluded	
 		if (!elm.isImpliedIncluded) {
@@ -284,7 +285,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkNamespace(Namespace namesp) {
 		// validateNamespaceDistinguishability
 		// Do not check distinguishability for automatically constructed expressions and binding connectors (to improve performance).
@@ -334,7 +335,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 	
 	/* CORE */
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkSpecialization(Specialization s) {
 		// validateSpecializationSpecificNotConjugated
 		if (s.specific.isConjugated) {
@@ -342,7 +343,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkType(Type t) {
 		// validateTypeAtMostOneConjugator
 		if (t.ownedRelationship.filter[r | r instanceof Conjugation].size() > 1) {
@@ -372,7 +373,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 	
 	// Check default supertype (semantic constraint)
 	// Note: This check is not in the spec as a single constraint.
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkClassifier(Classifier c){
 		val defaultSupertype = ImplicitGeneralizationMap.getDefaultSupertypeFor(c.getClass())
 		if (!TypeUtil.conforms(c, SysMLLibraryUtil.getLibraryType(c, defaultSupertype)))
@@ -390,7 +391,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 	//    // validateEndFeatureMembershipIsEnd is automatically satisfied
 	// }
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkFeature(Feature f){
 		// TODO: Remove?
 		val types = f.type;
@@ -423,7 +424,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 		
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkFeatureChaining(FeatureChaining fc) {
 		// Add validateFeatureChainingFeatureConformance
 		val featureChainings = fc.featureChained.ownedFeatureChaining;
@@ -436,7 +437,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkRedefinition(Redefinition redef) {
 		val redefiningFeature = redef.redefiningFeature
 		val redefinedFeature = redef.redefinedFeature
@@ -479,7 +480,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkSubsetting(Subsetting sub) { 
 		
 		// Due to how connector is implemented, no validation is performed if the owner is a Connector.
@@ -565,7 +566,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 	
 	/* KERNEL */
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkDataType(DataType d) {
 		// validateDataTypeSpecialization
 		for (s: d.ownedSpecialization) {
@@ -575,7 +576,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkClass(org.omg.sysml.lang.sysml.Class c) {
 		// validateClassSpecialization
 		for (s: c.ownedSpecialization) {
@@ -585,7 +586,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkAssociation(Association a){
 		// validateAssociationBinarySpecialization
 		// NOTE: It is sufficient to check owned ends, since they will redefine ends from any supertypes.
@@ -609,7 +610,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		// validateAssociationStructureIntersection is automatically satisfied
 	}
 		
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkBindingConnector(BindingConnector bc){
 		// validateBindingConnectorIsBinary
 		if (bc.relatedFeature.length != 2) {
@@ -619,7 +620,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkImplicitBindingConnectors(Type type) {
 		TypeUtil.forEachImplicitBindingConnectorOf(type, [connector, kind | 
 			if (type instanceof FeatureReferenceExpression) {
@@ -663,7 +664,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 	}
 	
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkConnector(Connector c){		
 		// validateConnectorRelatedFeatures
 		if (!c.isAbstract) {
@@ -720,7 +721,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkParameterMembership(ParameterMembership m) {
 		if (!(m instanceof ReturnParameterMembership)) {
 			// validateParameterMembershipOwningType
@@ -733,7 +734,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkExpression(Expression e) {
 		// validateExpressionResultParameterMembership
 		val mems = e.ownedFeatureMembership.filter[m | m instanceof ReturnParameterMembership]
@@ -751,7 +752,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 	    }
 	}
 		
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkFunction(Function f) {
 		// validateFunctionResultParameterMembership
 		val mems = f.ownedFeatureMembership.filter[m | m instanceof ReturnParameterMembership]
@@ -769,7 +770,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 	    }
 	}
 		
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkReturnParameterMembership(ReturnParameterMembership m) {
 		// validateReturnParameterMembershipOwningType
 		val owningType = m.owningType
@@ -780,7 +781,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		// validateReturnParameterMembershipParameterHasDirectionOut is automatically satisfied
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkResultExpressionMembership(ResultExpressionMembership m) {
 		// validateResultExpressionMembershipOwningType
 		val owningType = m.owningType
@@ -801,7 +802,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 	//     // validateCollectExpressionOperator is automatically satisfied
 	// }
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkFeatureChainExpression(FeatureChainExpression e) {
 		// validateFeatureChainExpressionConformance
 		val feature = ExpressionUtil.getTargetFeatureFor(e)
@@ -816,7 +817,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkFeatureReferenceExpression(FeatureReferenceExpression e) {
 		// validateFeatureReferenceExpressionReferentIsFeature
 		val feature = ExpressionUtil.getReferentFor(e)
@@ -825,7 +826,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkInvocationExpression(InvocationExpression e) {
 		val type = ExpressionUtil.getExpressionTypeOf(e)
 		if (type !== null) {
@@ -851,7 +852,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkOperatorExpression(OperatorExpression e) {
 		// TODO: Add validateOperatorExpressionCastConformance
 		if (e.operator == "as") {
@@ -876,14 +877,14 @@ class KerMLValidator extends AbstractKerMLValidator {
 	// }
 	
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkItemFlow(ItemFlow flow) {
 		// validateItemFlowItemFeature
 		val items = flow.ownedFeature.filter[f | f instanceof ItemFeature]
 		checkAtMostOne(items, INVALID_ITEM_FLOW_ITEM_FEATURE_MSG, null, INVALID_ITEM_FLOW_ITEM_FEATURE)
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkItemFlowEnd(ItemFlowEnd flowEnd) {
 		// validateItemFlowEndIsEnd is automatically satisfied
 		
@@ -908,7 +909,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkFeatureValue(FeatureValue fv) {
 		// validateFeatureValueOverriding
 		val f = fv.featureWithValue;
@@ -920,7 +921,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkMultiplicityRange(MultiplicityRange mult) {
 		// TODO: Correct validateMultiplicityBoundResults OCL from KERML-199.
 		// validateMultiplicityRangeBoundResultTypes
@@ -931,7 +932,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		}
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkMetadataFeature(MetadataFeature mf) {
 		
 		// TODO: Submit new issue to revise this to actually fix the problem KERML-90 was trying to address.
@@ -987,7 +988,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 		checkMetadataBody(f)		
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkElementFilterMembership(ElementFilterMembership efm) {
 		val condition = efm.condition
 		if (condition !== null)
@@ -1000,7 +1001,7 @@ class KerMLValidator extends AbstractKerMLValidator {
 				error(INVALID_ELEMENT_FILTER_MEMBERSHIP_IS_BOOLEAN_MSG, efm, SysMLPackage.eINSTANCE.elementFilterMembership_Condition, INVALID_ELEMENT_FILTER_MEMBERSHIP_IS_BOOLEAN)
 	}
 	
-	@Check
+	@Check(CheckType.NORMAL)
 	def checkLibraryPackage(LibraryPackage pkg) {
 		if (pkg.isStandard && !pkg.eResource.isModelLibrary) {
 			warning(INVALID_LIBRARY_PACKAGE_NOT_STANDARD_MSG, pkg, SysMLPackage.eINSTANCE.libraryPackage_IsStandard, INVALID_LIBRARY_PACKAGE_NOT_STANDARD)

@@ -11,6 +11,7 @@ behavior TakePicture {
 	
 	step step1: Focus[1];	
 	step step2: Shoot[1];
+	step step3: Focus[1];
 	
 	succession flow exposure[1] from step1.xrsl to step2.xsf;
 
